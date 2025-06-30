@@ -6,9 +6,9 @@
         Background="#FF1E1E1E"
         AllowsTransparency="True"
         WindowStyle="None"
-        Icon="Assets/logo.png"
->
+        Icon="Assets/logo.png">
     <Window.Resources>
+        <!-- ToolbarButton Style -->
         <Style x:Key="ToolbarButton" TargetType="Button">
             <Setter Property="Background" Value="#FF2D2D2D"/>
             <Setter Property="Foreground" Value="#FFCCCCCC"/>
@@ -104,8 +104,58 @@
             </Setter>
         </Style>
 
+        <!-- Modern ScrollBar Style -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Track Name="PART_Track"
+                                   Value="{TemplateBinding Value}"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   ViewportSize="{TemplateBinding ViewportSize}"
+                                   Orientation="{TemplateBinding Orientation}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Visibility="Collapsed"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb"
+                                           Margin="2"
+                                           Height="{TemplateBinding Height}"
+                                           Width="{TemplateBinding Width}">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border x:Name="ThumbBorder"
+                                                        Background="#FF888888"
+                                                        CornerRadius="5"
+                                                        BorderBrush="#FFCCCCCC"
+                                                        BorderThickness="1"/>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ThumbBorder" Property="Background" Value="#FFAAAAAA"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsDragging" Value="True">
+                                                        <Setter TargetName="ThumbBorder" Property="Background" Value="#FFCCCCCC"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Visibility="Collapsed"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
-    
+
     <Border CornerRadius="15" Background="#FF1C1C1C">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -130,153 +180,146 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="ImAged" 
-                           Foreground="White" 
-                           FontSize="18" 
-                           VerticalAlignment="Center" 
-                           Margin="15,0,0,0"/>
-
-                <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
-                     <!-- Import Button and Status Indicator -->
-                    <Button Content="Import .ttl" 
-                            Style="{StaticResource ToolbarButton}"
-                            VerticalAlignment="Center"
-                            Margin="0,0,10,0"/>
-                    <TextBlock Text="NTP: Valid" 
-                               Foreground="#FF00FF00" 
+                               Foreground="White" 
+                               FontSize="18" 
                                VerticalAlignment="Center" 
-                               Margin="0,0,10,0"/>
-                    
-                    <!-- Window control buttons -->
-                    <Button Content="—" 
-                            Style="{StaticResource WindowControlButton}"
-                            Click="MinimizeButton_Click"/>
-                    <Button Content="□" 
-                            Style="{StaticResource WindowControlButton}"
-                            Click="MaximizeButton_Click"/>
-                    <Button Content="×" 
-                            Style="{StaticResource WindowControlButton}"
-                            Click="CloseButton_Click"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+                               Margin="15,0,0,0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <!-- Import Button and Status Indicator -->
+                        <Button Content="Import .ttl" 
+                                Style="{StaticResource ToolbarButton}"
+                                VerticalAlignment="Center"
+                                Margin="0,0,10,0"/>
+                        <TextBlock Text="NTP: Valid" 
+                                   Foreground="#FF00FF00" 
+                                   VerticalAlignment="Center" 
+                                   Margin="0,0,10,0"/>
+                        <!-- Window control buttons -->
+                        <Button Content="—" 
+                                Style="{StaticResource WindowControlButton}"
+                                Click="MinimizeButton_Click"/>
+                        <Button Content="□" 
+                                Style="{StaticResource WindowControlButton}"
+                                Click="MaximizeButton_Click"/>
+                        <Button Content="×" 
+                                Style="{StaticResource WindowControlButton}"
+                                Click="CloseButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
             <!-- Sidebar Area -->
             <Border Grid.Row="1" Grid.Column="0" Background="#FF252525" Padding="15">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="Tools" Foreground="#FFAAAAAA" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-
                         <!-- Image Processing Tools -->
-                        <Border Background="#FF2D2D2D" 
-                                CornerRadius="8" 
-                                Padding="15" 
-                                Margin="0,0,0,15">
-                            <StackPanel>
-                                <TextBlock Text="Image Tools" 
-                                         Foreground="White" 
-                                         FontSize="16" 
-                                         Margin="0,0,0,15"/>
-                                
-                                <!-- Transform Tools -->
-                                <TextBlock Text="Transform" 
-                                         Foreground="#FFAAAAAA" 
-                                         FontSize="14" 
-                                         Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="↺ Rotate Left"
-                                            HorizontalAlignment="Left"
-                                            Margin="0,0,0,5"
-                                            Click="RotateLeft_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="↻ Rotate Right"
-                                            HorizontalAlignment="Left"
-                                             Margin="0,0,0,5"
-                                            Click="RotateRight_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="↔ Flip Horizontal"
-                                            HorizontalAlignment="Left"
-                                             Margin="0,0,0,5"
-                                            Click="FlipHorizontal_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="↕ Flip Vertical"
-                                            HorizontalAlignment="Left"
-                                            Click="FlipVertical_Click"/>
-                                </StackPanel>
-
-                                <!-- Adjustments -->
-                                <TextBlock Text="Adjustments" 
-                                         Foreground="#FFAAAAAA" 
-                                         FontSize="14" 
-                                         Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                                    <StackPanel Margin="0,0,0,10">
-                                        <TextBlock Text="Brightness:" 
-                                                 Foreground="White" 
-                                                 VerticalAlignment="Center"/>
-                                        <Slider x:Name="BrightnessSlider"
-                                                Minimum="-100"
-                                                Maximum="100"
-                                                Value="0"
-                                                ValueChanged="BrightnessSlider_ValueChanged"/>
+                        <Border Background="#FF2D2D2D" CornerRadius="5" Padding="10" Margin="0,0,0,10">
+                            <Expander Header="Image Tools"
+                                      Foreground="White"
+                                      FontSize="16"
+                                      FontWeight="Bold"
+                                      Background="#FF2D2D2D"
+                                      Padding="15"
+                                      Margin="0,0,0,15"
+                                      IsExpanded="False">
+                                <StackPanel>
+                                    <!-- Transform Tools -->
+                                    <TextBlock Text="Transform" 
+                                               Foreground="#FFAAAAAA" 
+                                               FontSize="14" 
+                                               Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="↺ Rotate Left"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="RotateLeft_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="↻ Rotate Right"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="RotateRight_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="↔ Flip Horizontal"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="FlipHorizontal_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="↕ Flip Vertical"
+                                                HorizontalAlignment="Left"
+                                                Click="FlipVertical_Click"/>
                                     </StackPanel>
-                                    <StackPanel Margin="0,0,0,10">
-                                        <TextBlock Text="Contrast:" 
-                                                 Foreground="White" 
-                                                 VerticalAlignment="Center"/>
-                                        <Slider x:Name="ContrastSlider"
-                                                Minimum="-100"
-                                                Maximum="100"
-                                                Value="0"
-                                                ValueChanged="ContrastSlider_ValueChanged"/>
+                                    <!-- Adjustments -->
+                                    <TextBlock Text="Adjustments" 
+                                               Foreground="#FFAAAAAA" 
+                                               FontSize="14" 
+                                               Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                        <StackPanel Margin="0,0,0,10">
+                                            <TextBlock Text="Brightness:" 
+                                                       Foreground="White" 
+                                                       VerticalAlignment="Center"/>
+                                            <Slider x:Name="BrightnessSlider"
+                                                    Minimum="-100"
+                                                    Maximum="100"
+                                                    Value="0"
+                                                    ValueChanged="BrightnessSlider_ValueChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,10">
+                                            <TextBlock Text="Contrast:" 
+                                                       Foreground="White" 
+                                                       VerticalAlignment="Center"/>
+                                            <Slider x:Name="ContrastSlider"
+                                                    Minimum="-100"
+                                                    Maximum="100"
+                                                    Value="0"
+                                                    ValueChanged="ContrastSlider_ValueChanged"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Saturation:" 
+                                                       Foreground="White" 
+                                                       VerticalAlignment="Center"/>
+                                            <Slider x:Name="SaturationSlider"
+                                                    Minimum="-100"
+                                                    Maximum="100"
+                                                    Value="0"
+                                                    ValueChanged="SaturationSlider_ValueChanged"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                    <StackPanel>
-                                        <TextBlock Text="Saturation:" 
-                                                 Foreground="White" 
-                                                 VerticalAlignment="Center"/>
-                                        <Slider x:Name="SaturationSlider"
-                                                Minimum="-100"
-                                                Maximum="100"
-                                                Value="0"
-                                                ValueChanged="SaturationSlider_ValueChanged"/>
+                                    <!-- Filters -->
+                                    <TextBlock Text="Filters" 
+                                               Foreground="#FFAAAAAA" 
+                                               FontSize="14" 
+                                               Margin="0,0,0,5"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="Grayscale"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="Grayscale_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="Sepia"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="Sepia_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="Invert"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,5"
+                                                Click="Invert_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Content="Reset"
+                                                HorizontalAlignment="Left"
+                                                Click="Reset_Click"/>
                                     </StackPanel>
                                 </StackPanel>
-
-                                <!-- Filters -->
-                                <TextBlock Text="Filters" 
-                                         Foreground="#FFAAAAAA" 
-                                         FontSize="14" 
-                                         Margin="0,0,0,5"/>
-                                <StackPanel Orientation="Vertical">
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="Grayscale"
-                                            HorizontalAlignment="Left"
-                                             Margin="0,0,0,5"
-                                            Click="Grayscale_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="Sepia"
-                                            HorizontalAlignment="Left"
-                                             Margin="0,0,0,5"
-                                            Click="Sepia_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="Invert"
-                                            HorizontalAlignment="Left"
-                                             Margin="0,0,0,5"
-                                            Click="Invert_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Content="Reset"
-                                            HorizontalAlignment="Left"
-                                            Click="Reset_Click"/>
-                                </StackPanel>
-                            </StackPanel>
+                            </Expander>
                         </Border>
-                        
+                        <!-- Files Section in Sidebar -->
                         <TextBlock Text="Files" Foreground="#FFAAAAAA" FontSize="16" FontWeight="Bold" Margin="0,15,0,10"/>
-                        
-                        <!-- File List Area -->
                         <StackPanel x:Name="FileListPanel">
                             <!-- File items will be added here dynamically -->
-
                             <!-- Sample File Item -->
                             <Border Background="#FF2D2D2D" CornerRadius="5" Padding="8" Margin="0,3,0,3">
                                 <Grid>
@@ -291,8 +334,6 @@
                                     <Ellipse Grid.Column="1" Width="8" Height="8" Fill="#FF00FF00" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </Grid>
                             </Border>
-
-                             <!-- Sample File Item -->
                             <Border Background="#FF2D2D2D" CornerRadius="5" Padding="8" Margin="0,3,0,3">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -306,8 +347,6 @@
                                     <Ellipse Grid.Column="1" Width="8" Height="8" Fill="#FFFFFF00" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </Grid>
                             </Border>
-                            
-                            <!-- Sample File Item -->
                             <Border Background="#FF2D2D2D" CornerRadius="5" Padding="8" Margin="0,3,0,3">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -321,8 +360,6 @@
                                     <Ellipse Grid.Column="1" Width="8" Height="8" Fill="#FFFF0000" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </Grid>
                             </Border>
-
-                            <!-- Sample File Item -->
                             <Border Background="#FF2D2D2D" CornerRadius="5" Padding="8" Margin="0,3,0,3">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -336,9 +373,7 @@
                                     <Ellipse Grid.Column="1" Width="8" Height="8" Fill="#FF808080" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </Grid>
                             </Border>
-
                         </StackPanel>
-
                     </StackPanel>
                 </ScrollViewer>
             </Border>
@@ -348,88 +383,87 @@
                 <TabControl>
                     <TabItem Header="Files">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <!-- Existing Upload Section -->
-                            <Border Grid.Row="0" 
-                                    Background="#FF2D2D2D" 
-                                    CornerRadius="8" 
-                                    Padding="15" 
-                                    Margin="20,10,20,10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Upload Image" 
-                                                 Foreground="White" 
-                                                 FontSize="16" 
-                                                 Margin="0,0,0,5"/>
-                                        <TextBlock x:Name="SelectedFileText" 
-                                                 Text="No file selected" 
-                                                 Foreground="#FFAAAAAA" 
-                                                 FontSize="12"/>
-                                    </StackPanel>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Grid.Column="1" 
-                                            Content="Choose File" 
-                                            Width="100" 
-                                            Margin="0,0,10,0"
-                                            Click="ChooseFile_Click"/>
-                                    <Button Style="{StaticResource ToolbarButton}"
-                                            Grid.Column="2" 
-                                            Content="Save Image" 
-                                            Width="100"
-                                            Click="SaveImage_Click"/>
-                                </Grid>
-                            </Border>
-
-                            <!-- Existing Image Display Area -->
-                            <Border Grid.Row="1" 
-                                    Background="#FF2D2D2D" 
-                                    CornerRadius="8" 
-                                    Padding="15"
-                                    Margin="20,10,20,20">
-                                <Grid>
-                                    <Image x:Name="MainImage" 
-                                           Stretch="Uniform"
-                                           RenderOptions.BitmapScalingMode="HighQuality"/>
-                                    <TextBlock x:Name="NoImageText"
-                                             Text="No image selected" 
-                                             Foreground="#FFAAAAAA" 
-                                             HorizontalAlignment="Center" 
-                                             VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                        </Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <!-- Existing Upload Section -->
+                                <Border Grid.Row="0" 
+                                        Background="#FF2D2D2D" 
+                                        CornerRadius="8" 
+                                        Padding="15" 
+                                        Margin="20,10,20,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="Upload Image" 
+                                                       Foreground="White" 
+                                                       FontSize="16" 
+                                                       Margin="0,0,0,5"/>
+                                            <TextBlock x:Name="SelectedFileText" 
+                                                       Text="No file selected" 
+                                                       Foreground="#FFAAAAAA" 
+                                                       FontSize="12"/>
+                                        </StackPanel>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Grid.Column="1" 
+                                                Content="Choose File" 
+                                                Width="100" 
+                                                Margin="0,0,10,0"
+                                                Click="ChooseFile_Click"/>
+                                        <Button Style="{StaticResource ToolbarButton}"
+                                                Grid.Column="2" 
+                                                Content="Save Image" 
+                                                Width="100"
+                                                Click="SaveImage_Click"/>
+                                    </Grid>
+                                </Border>
+                                <!-- Existing Image Display Area -->
+                                <Border Grid.Row="1" 
+                                        Background="#FF2D2D2D" 
+                                        CornerRadius="8" 
+                                        Padding="15"
+                                        Margin="20,10,20,20">
+                                    <Grid>
+                                        <Image x:Name="MainImage" 
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        <TextBlock x:Name="NoImageText"
+                                                   Text="No image selected" 
+                                                   Foreground="#FFAAAAAA" 
+                                                   HorizontalAlignment="Center" 
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Activity">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <TextBlock Text="Activity Log" Foreground="White" FontSize="18" Margin="0,0,0,10"/>
-                            <!-- Future activity log content here -->
-                            <TextBlock Text="[Timestamp] - Image 'image1.ttl' loaded." Foreground="#FFAAAAAA" Margin="0,2"/>
-                            <TextBlock Text="[Timestamp] - Applied Grayscale filter." Foreground="#FFAAAAAA" Margin="0,2"/>
-                            <TextBlock Text="[Timestamp] - Image saved as 'image1_modified.png'." Foreground="#FFAAAAAA" Margin="0,2"/>
-                            <TextBlock Text="[Timestamp] - TTL conversion initiated for 'image1_modified.png'." Foreground="#FFAAAAAA" Margin="0,2"/>
-                        </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Activity Log" Foreground="White" FontSize="18" Margin="0,0,0,10"/>
+                                <!-- Future activity log content here -->
+                                <TextBlock Text="[Timestamp] - Image 'image1.ttl' loaded." Foreground="#FFAAAAAA" Margin="0,2"/>
+                                <TextBlock Text="[Timestamp] - Applied Grayscale filter." Foreground="#FFAAAAAA" Margin="0,2"/>
+                                <TextBlock Text="[Timestamp] - Image saved as 'image1_modified.png'." Foreground="#FFAAAAAA" Margin="0,2"/>
+                                <TextBlock Text="[Timestamp] - TTL conversion initiated for 'image1_modified.png'." Foreground="#FFAAAAAA" Margin="0,2"/>
+                            </StackPanel>
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Validation">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                             <TextBlock Text="Validation Results" Foreground="White" FontSize="18" Margin="0,0,0,10"/>
-                            <!-- Future validation results content here -->
-                            <TextBlock Text="'image1.ttl' - Valid (Signature OK)" Foreground="#FF00FF00" Margin="0,2"/>
-                            <TextBlock Text="'image2.ttl' - Invalid (Tampered Content)" Foreground="#FFFF0000" Margin="0,2"/>
-                            <TextBlock Text="'image3.ttl' - Warning (Expired TTL)" Foreground="#FFFFFF00" Margin="0,2"/>
-                        </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Validation Results" Foreground="White" FontSize="18" Margin="0,0,0,10"/>
+                                <!-- Future validation results content here -->
+                                <TextBlock Text="'image1.ttl' - Valid (Signature OK)" Foreground="#FF00FF00" Margin="0,2"/>
+                                <TextBlock Text="'image2.ttl' - Invalid (Tampered Content)" Foreground="#FFFF0000" Margin="0,2"/>
+                                <TextBlock Text="'image3.ttl' - Warning (Expired TTL)" Foreground="#FFFFFF00" Margin="0,2"/>
+                            </StackPanel>
                         </ScrollViewer>
                     </TabItem>
                 </TabControl>
@@ -448,4 +482,4 @@
             </Grid>
         </Grid>
     </Border>
-</Window> 
+</Window>
